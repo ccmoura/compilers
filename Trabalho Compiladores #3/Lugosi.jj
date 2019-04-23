@@ -1,0 +1,132 @@
+PARSER_BEGIN(Lugosi)
+import java.io.*;
+public class Lugosi {
+
+  public static void main(String args[]) throws ParseException,IOException {
+    
+    Lugosi parser = new Lugosi(new FileInputStream(args[0]));
+    parser.Lugosi();
+  }
+
+}
+
+PARSER_END(Lugosi)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+}
+
+TOKEN :
+{
+  <MAIN: "main">
+| <ACHAVES: "{">
+| <FCHAVES: "}">
+| <TOKEN_ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"])* ("_")*>
+| <TOKEN_NUM: (["0"-"9"])+ (["."](["0"-"9"])+)? (["^"](["0"-"9"])+)?>
+| <APAREN: "(">
+| <FPAREN: ")">
+| <VAR: "var">
+| <TIPO: "int" | "bool">
+| <PV: ";">
+| <ATRIB: ":=">
+| <IF: "if">
+| <WHILE: "while">
+| <DO: "do">
+| <RETURN: "return>
+| <V: ",">
+| <PRINT: "print">
+| <FUNCTION>: "function">
+| <OP: "+" | "-" | "*" | "/" | "||" | "&&" | "<" | ">" | "==">
+| <BOOLEAN: "true" | "false">
+}
+
+
+TOKEN :
+{
+  <NUM : (["0"-"9"])+>
+ |< ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"])*>
+
+}
+
+
+
+void Lugosi () :
+{}
+{ 
+
+  Main() 
+  Func()?
+  <EOF> 
+}
+	
+
+void Main ():
+{}
+{
+ <MAIN> <ACHAVES> 
+ 
+ VarDecl()?
+ SeqComandos()?
+
+ <FCHAVES>
+
+}
+
+Func():
+{}
+{
+ (<FUNCTION> <TIPO> <TOKEN_ID> <APAREN> ListaArg()? <FPAREN> <ACHAVES> VarDecl() SeqComandos() <FCHAVES>)+
+}
+
+SeqComandos():
+{}
+{
+ (<TOKEN_ID> <ATRIB> <EXP> <PV>
+| <TOKEN_ID> <APAREN> ListaExp()? <FPAREN> <PV>
+| <IF> <APAREN> <EXP> <FPAREN> <ACHAVES> SeqComandos() <FCHAVES> <PV>
+| <WHILE> <APAREN> <EXP> <FPAREN> <DO> <ACHAVES> SeqComandos() <FCHAVES> <PV>
+| <DO> <APAREN> <EXP> <FPAREN> <WHILE> <ACHAVES> <EXP> <FCHAVES> <PV>
+| <RETURN> <EXP> <PV>
+| <PRINT> <APAREN> <EXP> <FPAREN> <PV>)*
+}
+
+ListaExp():
+{}
+{
+ Exp() | ListaExp() <V> Exp()
+}
+
+VarDecl():
+{}
+{
+ (<VAR> <TIPO> <TOKEN_ID> <PV>)*
+}
+
+Exp():
+{}
+{
+ <APAREN> Exp() <OP> Exp() <FPAREN> | Fator() | Fator()
+}
+
+Fator():
+{}
+{
+ <TOKEN_ID> | Fator2() | <TOKEN_NUM> | <BOOLEAN>
+}
+
+Fator2():
+{}
+{
+  (<APAREN> (ListaExp()? <FPAREN>))?
+}
+
+ListaArg():
+{}
+{
+ <TIPO> <TOKEN_ID> | (ListaArg() <V> <TIPO> <TOKEN_ID>)
+}
+
