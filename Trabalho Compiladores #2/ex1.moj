@@ -1,0 +1,24 @@
+void main(){
+	int ubs;
+	int upa;
+	bool ps;
+	FuncFazNada();
+	ubs := ubs - upa;
+	
+	if(and(true)(true)){
+		ubs := 171;
+	}
+	while(false)do{
+		skip();
+	}
+	
+	upa := (nada(ubs) + 333);
+
+	skip();
+
+	return 665+1;
+}
+
+bool nada(int in){
+	  in := 333;
+}

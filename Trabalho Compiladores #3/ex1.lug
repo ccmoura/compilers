@@ -1,0 +1,10 @@
+main{
+var bool aa2_;
+var int flag;
+
+	
+}
+function int validate (int k) { 
+	var int x; 
+	return x; 
+}

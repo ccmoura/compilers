@@ -1,0 +1,23 @@
+void main(){
+	int a;
+	int b;
+	b := 5 / 5;
+	while( and(not(false))(true)) do{
+		a := 5 + a;
+		b := funcao(a+2,b);
+	}
+	if( leq (a+1)(b+1) ){
+		b := 0;
+	}
+}
+
+int funcao(int a, int b){
+	return a+b;
+}
+
+bool funcao2( int b){
+	if(leq (b)(2)){
+		return true;
+	}
+	return false;
+}

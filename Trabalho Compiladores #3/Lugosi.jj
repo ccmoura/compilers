@@ -25,23 +25,23 @@ TOKEN :
   <MAIN: "main">
 | <ACHAVES: "{">
 | <FCHAVES: "}">
-| <TOKEN_ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"])* ("_")*>
-| <TOKEN_NUM: (["0"-"9"])+ (["."](["0"-"9"])+)? (["^"](["0"-"9"])+)?>
 | <APAREN: "(">
 | <FPAREN: ")">
 | <VAR: "var">
-| <TIPO: "int" | "bool">
+| <TIPO: ("int" | "bool")>
 | <PV: ";">
 | <ATRIB: ":=">
 | <IF: "if">
 | <WHILE: "while">
 | <DO: "do">
-| <RETURN: "return>
+| <RETURN: "return">
 | <V: ",">
 | <PRINT: "print">
-| <FUNCTION>: "function">
-| <OP: "+" | "-" | "*" | "/" | "||" | "&&" | "<" | ">" | "==">
-| <BOOLEAN: "true" | "false">
+| <FUNCTION: "function">
+| <OP: ("+" | "-" | "*" | "/" | "||" | "&&" | "<" | ">" | "==")>
+| <BOOLEAN: ("true" | "false")>
+| <TOKEN_ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"])* ("_")*>
+| <TOKEN_NUM: (["0"-"9"])+ ("."(["0"-"9"])+)? ("E" ("+" | "-")? (["0"-"9"])+)?>
 }
 
 
@@ -59,7 +59,7 @@ void Lugosi () :
 { 
 
   Main() 
-  Func()?
+  (Func())?
   <EOF> 
 }
 	
@@ -69,64 +69,82 @@ void Main ():
 {
  <MAIN> <ACHAVES> 
  
- VarDecl()?
- SeqComandos()?
+ VarDecl()
+ SeqComandos()
 
  <FCHAVES>
 
 }
 
-Func():
+void Func():
 {}
 {
- (<FUNCTION> <TIPO> <TOKEN_ID> <APAREN> ListaArg()? <FPAREN> <ACHAVES> VarDecl() SeqComandos() <FCHAVES>)+
+ (<FUNCTION> <TIPO> <TOKEN_ID> <APAREN> (ListaArg())? <FPAREN> <ACHAVES> VarDecl() SeqComandos() <FCHAVES>)+
 }
 
-SeqComandos():
+void ListaArg():
 {}
 {
- (<TOKEN_ID> <ATRIB> <EXP> <PV>
-| <TOKEN_ID> <APAREN> ListaExp()? <FPAREN> <PV>
-| <IF> <APAREN> <EXP> <FPAREN> <ACHAVES> SeqComandos() <FCHAVES> <PV>
-| <WHILE> <APAREN> <EXP> <FPAREN> <DO> <ACHAVES> SeqComandos() <FCHAVES> <PV>
-| <DO> <APAREN> <EXP> <FPAREN> <WHILE> <ACHAVES> <EXP> <FCHAVES> <PV>
-| <RETURN> <EXP> <PV>
-| <PRINT> <APAREN> <EXP> <FPAREN> <PV>)*
+ <TIPO> <TOKEN_ID> (<PV> ListaArg())?
 }
 
-ListaExp():
+void SeqComandos():
 {}
 {
- Exp() | ListaExp() <V> Exp()
+ (Comando())*
 }
 
-VarDecl():
+void Comando():
+{}
+{
+(<TOKEN_ID> Comandox())
+| (<IF> <APAREN> Exp() <FPAREN> <ACHAVES> SeqComandos() <FCHAVES> <PV>)
+| (<WHILE> <APAREN> Exp() <FPAREN> <DO> <ACHAVES> SeqComandos() <FCHAVES> <PV>)
+| (<DO> <ACHAVES> SeqComandos() <FCHAVES> <WHILE> <APAREN> Exp() <FPAREN> <PV>)
+| (<RETURN> Exp() <PV>)
+| (<PRINT> <APAREN> Exp() <FPAREN> <PV>)
+}
+void Comandox():
+{}
+{
+ (<ATRIB> Exp() <PV>)
+| (<APAREN> ListaExp() <FPAREN> <PV>)
+}
+void ListaExp():
+{}
+{
+ Exp() ListaExpx()
+}
+
+
+void ListaExpx():
+{}
+{
+ (<V> Exp() ListaExpx())?
+}
+void VarDecl():
 {}
 {
  (<VAR> <TIPO> <TOKEN_ID> <PV>)*
 }
 
-Exp():
+void Exp():
 {}
 {
- <APAREN> Exp() <OP> Exp() <FPAREN> | Fator() | Fator()
+ (<APAREN> Exp() <OP> Exp() <FPAREN>) | Fator()
 }
 
-Fator():
+void Fator():
 {}
 {
- <TOKEN_ID> | Fator2() | <TOKEN_NUM> | <BOOLEAN>
+ (<TOKEN_ID> Fatorx()) | <TOKEN_NUM> | <BOOLEAN>
 }
 
-Fator2():
+void Fatorx():
 {}
 {
-  (<APAREN> (ListaExp()? <FPAREN>))?
+  (<APAREN> (ListaExp())? <FPAREN>)?
 }
 
-ListaArg():
-{}
-{
- <TIPO> <TOKEN_ID> | (ListaArg() <V> <TIPO> <TOKEN_ID>)
-}
+
 

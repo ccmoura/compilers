@@ -1,0 +1,16 @@
+void main(){
+	int ff;
+	int gg;
+	ff := 2;
+	gg := fff / 4;
+	while(and (true)(false)) do { 
+		ff := ff + ff; 
+	}
+	gg := funcao( funcao(ff) * 3);
+}
+
+int funcao( int f ){
+	int g;
+	g := 9;
+	return f*g;
+}
