@@ -1,0 +1,74 @@
+import java.io.*;
+
+class ArvoreLugosi {
+	Main main;
+	ArrayList<Func> funcs;
+}
+
+class Main {
+	ArrayList<VarDecl> varDecl;
+	ArrayList<Comando> comandos;
+}
+
+class Vardecl {
+	Tipo tipo;
+	String var;
+}
+
+class Tipo {}
+
+class Int extends Tipo {}
+class Bool extends Tipo {}
+
+class Comando {}
+
+class Atribuicao extends Comando {
+	String var;
+	Exp exp;
+}
+
+class Chamadafuncao extends Comando {
+	String nomeFuncao;
+	ArrayList<Exp> argumentos;
+}
+
+class If extends Comando {
+	Exp exp;
+	ArrayList<Comando> then;
+}
+
+class While extends Comando {
+	Exp exp;
+	ArrayList<Comando> do;
+}
+
+class Do extends Comando {
+	ArrayList<Comando> seqComandos;
+	Exp while;
+}
+
+class Return extends Comando {
+	Exp exp;
+}
+
+class Print extends Comando {
+	Exp exp;
+}
+
+class Exp {}
+
+class Expressao extends Exp {
+	String op;
+	Exp arg1;
+	Exp arg2;
+}
+
+class Fator extends Exp {}
+
+class TokenId extends Fator {
+	String tokenId;
+}
+
+class TokenIdLista extends Fator {
+
+}
